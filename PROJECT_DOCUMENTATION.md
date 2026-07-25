@@ -272,9 +272,12 @@ Get-NetTCPConnection -State Listen -LocalPort 8501
 | Qwen3-VL 32B Thinking | `Qwen/Qwen3-VL-32B-Thinking` | 复杂几何和多步推理，速度较慢 |
 | Qwen3.5 9B | `Qwen/Qwen3.5-9B` | 新一代轻量多模态 |
 | Qwen3.5 35B A3B | `Qwen/Qwen3.5-35B-A3B` | 新一代 MoE 多模态 |
+| Qwen3.5 122B A10B | `Qwen/Qwen3.5-122B-A10B` | 大型 MoE，多步应用题、图表和复杂推理 |
+| Qwen3.5 397B A17B | `Qwen/Qwen3.5-397B-A17B` | 旗舰超大 MoE，优先追求能力，耗时和费用最高 |
 | Qwen3.6 27B | `Qwen/Qwen3.6-27B` | 新一代视觉理解和推理 |
 | Qwen3.6 35B A3B | `Qwen/Qwen3.6-35B-A3B` | 新一代 MoE 多模态 |
-| Kimi K2.6 Pro | `Pro/moonshotai/Kimi-K2.6` | 强推理，通常费用较高 |
+| GLM-4.5V | `zai-org/GLM-4.5V` | 106B 视觉推理模型，适合复杂图文理解 |
+| Kimi K2.6 Pro | `Pro/moonshotai/Kimi-K2.6` | 超大多模态模型，强推理，通常费用较高 |
 | Qwen3 Omni 30B Instruct | `Qwen/Qwen3-Omni-30B-A3B-Instruct` | 图像、音频、视频综合输入 |
 | DeepSeek OCR | `deepseek-ai/DeepSeek-OCR` | 文字提取，不推荐直接用于完整数学批改 |
 | 自定义模型 | 用户输入 | 其他支持图片输入和 Chat Completions 的模型 |
@@ -284,8 +287,14 @@ Get-NetTCPConnection -State Listen -LocalPort 8501
 - 追求速度：`Qwen/Qwen3-VL-8B-Instruct`。
 - 日常平衡：`Qwen/Qwen3-VL-30B-A3B-Instruct`。
 - 更重视识别和讲解：`Qwen/Qwen3-VL-32B-Instruct`。
-- 复杂图形和多步推理：Thinking 或更强模型。
+- 复杂图形和多步推理：Qwen3.5 122B、GLM-4.5V 或 Thinking 模型。
+- 只追求最高能力且可接受更高费用与等待时间：Qwen3.5 397B。
 - 只做 OCR：DeepSeek OCR；其输出不一定完整遵循报告格式。
+
+截至 2026-07-25，项目通过硅基流动 `/v1/models` 接口确认上述新增模型 ID
+对当前账户可见。旧的 `Qwen/Qwen3-VL-235B-A22B-Instruct` 和
+`Qwen/Qwen3-VL-235B-A22B-Thinking` 已于 2026-04-22 下线，因此不加入列表。
+大模型通常要求账户有可用付费余额；余额不足会直接返回 HTTP 402，并非模型超时。
 
 项目真实冒烟测试中，8B 快速模型分析一张简单模拟错题约耗时 10.9 秒，并正确识别 `6×7=40` 为错误、给出正确答案 `42`。这只代表单次测试，实际速度受图片、题数、网络、账户限流和平台负载影响。
 
@@ -690,7 +699,7 @@ cd D:\code\HomeWork
 .\.venv\Scripts\python.exe -m pytest -q
 ```
 
-当前共有 11 项自动测试，覆盖：
+当前共有 12 项自动测试，覆盖：
 
 - 大图片等比缩放；
 - 非图片拒绝；
@@ -835,7 +844,7 @@ Get-NetTCPConnection -State Listen -LocalPort 8501
 - Python 3.12 已安装；
 - `.venv` 已创建，项目依赖已安装；
 - API 密钥通过本机 `.env` 配置；
-- 11 项自动测试全部通过；
+- 12 项自动测试全部通过；
 - Streamlit 页面渲染无异常；
 - 服务返回 HTTP 200；
 - 服务仅监听 `127.0.0.1:8501`；

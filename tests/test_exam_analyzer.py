@@ -64,6 +64,9 @@ def test_recommended_timeout_grows_for_large_models():
     assert recommended_timeout_seconds("Qwen/Qwen3-VL-8B-Instruct") == 240
     assert recommended_timeout_seconds("Qwen/Qwen3-VL-32B-Instruct") == 600
     assert recommended_timeout_seconds("Qwen/Qwen3-VL-32B-Thinking") == 900
+    assert recommended_timeout_seconds("Qwen/Qwen3.5-122B-A10B") == 900
+    assert recommended_timeout_seconds("Qwen/Qwen3.5-397B-A17B") == 1200
+    assert recommended_timeout_seconds("zai-org/GLM-4.5V") == 900
 
 
 @patch("exam_analyzer.requests.Session.post")
@@ -113,6 +116,19 @@ def test_analyze_exam_shows_friendly_unauthorized_error(mock_post):
 
     with pytest.raises(ExamAnalyzerError, match="API 密钥无效"):
         analyze_exam([image], api_key="bad-key", grade="四年级", stream=False)
+
+
+@patch("exam_analyzer.requests.Session.post")
+def test_analyze_exam_shows_friendly_payment_required_error(mock_post):
+    response = Mock()
+    response.status_code = 402
+    response.json.return_value = {"message": "Insufficient balance"}
+    response.headers = {"content-type": "application/json"}
+    mock_post.return_value = response
+    image = PreparedImage("one.jpg", "data:image/jpeg;base64,AA==", 100, 100)
+
+    with pytest.raises(ExamAnalyzerError, match="账户余额或付费额度不足"):
+        analyze_exam([image], api_key="test-key", grade="四年级", stream=False)
 
 
 @patch("exam_analyzer.requests.Session.post")

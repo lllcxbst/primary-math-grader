@@ -81,6 +81,10 @@ def _env_flag(name: str, default: bool) -> bool:
 def recommended_timeout_seconds(model: str) -> int:
     """返回无响应数据时的建议读取超时；流式数据到达会重置该计时。"""
     lowered = model.lower()
+    if "397b" in lowered:
+        return 1200
+    if any(marker in lowered for marker in ("122b", "106b", "glm-4.5v")):
+        return 900
     if "thinking" in lowered or lowered.startswith("pro/"):
         return 900
     if any(marker in lowered for marker in ("32b", "27b", "35b")):
@@ -260,6 +264,7 @@ def _extract_error_message(response: requests.Response) -> str:
     status_messages = {
         400: "请求格式或图片不符合模型要求。",
         401: "API 密钥无效或已失效。",
+        402: "账户余额或付费额度不足，无法调用该模型；请充值或改用可用模型。",
         403: "当前账户无权调用该模型，请检查实名认证、余额和模型权限。",
         404: "接口或模型不存在，请检查模型名称。",
         413: "上传内容过大，请减少图片数量或尺寸。",

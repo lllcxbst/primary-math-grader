@@ -28,9 +28,12 @@ MODEL_OPTIONS = {
     "Qwen3-VL 32B Thinking｜复杂几何与推理、较慢": "Qwen/Qwen3-VL-32B-Thinking",
     "Qwen3.5 9B｜新一代轻量多模态": "Qwen/Qwen3.5-9B",
     "Qwen3.5 35B A3B｜新一代 MoE 多模态": "Qwen/Qwen3.5-35B-A3B",
+    "Qwen3.5 122B A10B｜大型 MoE、复杂推理": "Qwen/Qwen3.5-122B-A10B",
+    "Qwen3.5 397B A17B｜旗舰超大 MoE、能力最强": "Qwen/Qwen3.5-397B-A17B",
     "Qwen3.6 27B｜通用稠密多模态、较慢": "Qwen/Qwen3.6-27B",
     "Qwen3.6 35B A3B｜最新一代 MoE 多模态": "Qwen/Qwen3.6-35B-A3B",
-    "Kimi K2.6 Pro｜强推理、费用较高": "Pro/moonshotai/Kimi-K2.6",
+    "GLM-4.5V｜106B 视觉推理、费用较高": "zai-org/GLM-4.5V",
+    "Kimi K2.6 Pro｜超大多模态、强推理、高费用": "Pro/moonshotai/Kimi-K2.6",
     "Qwen3 Omni 30B Instruct｜图像/音频/视频": "Qwen/Qwen3-Omni-30B-A3B-Instruct",
     "DeepSeek OCR｜只推荐文字提取": "deepseek-ai/DeepSeek-OCR",
     "自定义模型 ID": "",
@@ -91,7 +94,10 @@ with st.sidebar:
         "多模态模型",
         model_labels,
         index=default_model_index,
-        help="8B 通常最快；Thinking 和 Pro 模型通常更慢、费用更高。",
+        help=(
+            "8B 通常最快；122B、397B、GLM-4.5V 和 Pro 模型能力更强，"
+            "但通常更慢、费用更高，并需要账户有足够付费额度。"
+        ),
     )
     selected_model = MODEL_OPTIONS[model_label]
     if not selected_model:
