@@ -1,4 +1,4 @@
-"""小学数学错题分析 Demo（Streamlit 页面）。"""
+"""小学至高中数学错题分析 Demo（Streamlit 页面）。"""
 
 from __future__ import annotations
 
@@ -40,7 +40,7 @@ MODEL_OPTIONS = {
 }
 
 st.set_page_config(
-    page_title="小学数学智能批改",
+    page_title="小学至高中数学智能批改",
     page_icon="🧮",
     layout="wide",
 )
@@ -56,9 +56,12 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-st.title("🧮 小学数学智能批改")
+st.title("🧮 小学至高中数学智能批改")
 st.caption(f"图片识别与分析模型：`{os.getenv('SILICONFLOW_MODEL', DEFAULT_MODEL)}`")
-st.write("上传包含题目和学生答案的照片，系统会逐题判断对错，并给出错因、正确答案和订正步骤。")
+st.write(
+    "上传小学、初中或高中数学题及学生答案照片，系统会逐题判断对错，"
+    "并给出错因、正确答案和订正步骤。"
+)
 
 api_key = os.getenv("SILICONFLOW_API_KEY", "").strip()
 if not api_key:
@@ -70,9 +73,23 @@ if not api_key:
 with st.sidebar:
     st.header("批改设置")
     grade = st.selectbox(
-        "年级",
-        ["一年级", "二年级", "三年级", "四年级", "五年级", "六年级"],
+        "学段与年级",
+        [
+            "小学一年级",
+            "小学二年级",
+            "小学三年级",
+            "小学四年级",
+            "小学五年级",
+            "小学六年级",
+            "初中一年级（初一）",
+            "初中二年级（初二）",
+            "初中三年级（初三）",
+            "高中一年级（高一）",
+            "高中二年级（高二）",
+            "高中三年级（高三）",
+        ],
         index=3,
+        help="年级会影响知识范围、解题方法、数学术语和讲解深度。",
     )
     analysis_mode = st.radio(
         "分析模式",
@@ -297,6 +314,6 @@ if result:
     st.download_button(
         "下载批改结果（Markdown）",
         data=result.content,
-        file_name="小学数学批改结果.md",
+        file_name="数学题批改结果.md",
         mime="text/markdown",
     )

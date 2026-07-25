@@ -11,6 +11,7 @@ from exam_analyzer import (
     ExamAnalyzerError,
     PreparedImage,
     analyze_exam,
+    build_system_prompt,
     build_user_prompt,
     prepare_image,
     recommended_timeout_seconds,
@@ -58,6 +59,16 @@ def test_fast_prompt_requests_concise_output():
     prompt = build_user_prompt(grade="三年级", concise=True)
     assert "快速批改模式" in prompt
     assert "订正步骤最多 3 步" in prompt
+
+
+def test_prompts_cover_primary_through_high_school():
+    system_prompt = build_system_prompt()
+    user_prompt = build_user_prompt(grade="高中二年级（高二）")
+    assert "小学一年级至高中三年级" in system_prompt
+    assert "代数、函数、三角、数列、几何和概率统计" in system_prompt
+    assert "题目范围可能从小学到高中" in user_prompt
+    assert "高中二年级（高二）" in user_prompt
+    assert "对应学段和年级的数学知识点" in user_prompt
 
 
 def test_recommended_timeout_grows_for_large_models():
